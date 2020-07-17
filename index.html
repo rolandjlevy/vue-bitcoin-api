@@ -27,13 +27,12 @@
 			<div v-else v-for="currency in info" class="currency">
 				{{ currency.description }}:
 				<span class="lighten">
-          <span v-html="currency.symbol"></span>
-          {{ currency.rate_float | currencydecimal }}
-      </span>
-    </div>
+          <span v-html="currency.symbol"></span>{{ currency.rate_float | currencydecimal }}
+        </span>
+      </div>
+    </section>
 
-  </section>
-</div>
+  </div>
 
 	<script src="index.js"></script>
 

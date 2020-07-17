@@ -3,7 +3,8 @@ new Vue({
   data: () => ({
     info: null,
     loading: true,
-    errored: false
+    errored: false,
+    coindeskUrl: 'https://api.coindesk.com/v1/bpi/currentprice.json'
   }),
   filters: {
     currencydecimal (value) {
@@ -16,21 +17,23 @@ new Vue({
       const day = String(date.getDay()).padStart(2, '0');
       const month = String(date.getMonth()).padStart(2, '0');
       const year = date.getFullYear();
-      return `${day} / ${month} / ${year}`;
+      return `Date: ${day}-${month}-${year}`;
+    },
+    getPriceIndex() {
+      fetch(this.coindeskUrl)
+      .then(res => res.json())
+      .then(data => {
+        this.info = data.bpi;
+        this.date = this.getDate(data.time.updated);
+      })
+      .catch(error => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => this.loading = false);
     }
   },
   mounted () {
-    const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
-    fetch(url)
-    .then(res => res.json()) 
-    .then(data => {
-      this.info = data.bpi;
-      this.date = this.getDate(data.time.updated);
-    })
-    .catch(error => {
-      console.log(error);
-      this.errored = true;
-    })
-    .finally(() => this.loading = false);
+    this.getPriceIndex();
   }
 });
